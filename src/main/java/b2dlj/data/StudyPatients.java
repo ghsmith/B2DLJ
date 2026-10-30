@@ -12,7 +12,7 @@ public class StudyPatients {
     @XmlAttribute
     public String studyName;
 
-    @XmlElement
+    @XmlElement(name = "patient")
     public List<Patient> patients;
 
 }
