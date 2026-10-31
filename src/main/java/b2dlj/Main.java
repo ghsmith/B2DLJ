@@ -6,14 +6,11 @@ import b2dlj.data.StudyPatients;
 import b2dlj.finder.PartFinder;
 import b2dlj.finder.PathologyCaseFinder;
 import b2dlj.finder.PatientFinder;
-import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.SchemaOutputResolver;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -65,19 +62,7 @@ public class Main {
 
         connClr.close();
 
-        JAXBContext jc = JAXBContext.newInstance(new Class[] { StudyPatients.class });
-        Marshaller m = jc.createMarshaller();
-        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        m.marshal(studyPatients, new FileOutputStream(new File("StudyPatients.xml")));
-
-        jc.generateSchema(new SchemaOutputResolver() {
-            public Result createOutput(String namespaceURI, String suggestedFileName) throws IOException {
-                File file = new File("StudyPatients.xsd");
-                StreamResult result = new StreamResult(file);
-                result.setSystemId(file.toURI().toURL().toString());
-                return result;
-            }
-        });
+        studyPatients.marshal("StudyPatients");
 
     }
 

@@ -12,5 +12,7 @@ public class Slide {
     public String slideDesigLab;
     @XmlAttribute
     public String stain;
+    @XmlAttribute
+    public String slideFileName;
 
 }
