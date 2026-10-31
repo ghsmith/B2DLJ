@@ -9,14 +9,24 @@ import java.util.List;
 public class PathologyCase {
 
     @XmlTransient
-    public String caseId;
+    public long caseId;
+    @XmlAttribute
+    public String caseIdStudy;
     @XmlAttribute
     public String accessionNumber;
     @XmlAttribute
     public Date collectionDate;
 
     @XmlElement
-    public String addendumDx;
+    public String addendum5Dx;
+    @XmlElement
+    public String addendum4Dx;
+    @XmlElement
+    public String addendum3Dx;
+    @XmlElement
+    public String addendum2Dx;
+    @XmlElement
+    public String addendum1Dx;
     @XmlElement
     public String finalDx;
     @XmlElement

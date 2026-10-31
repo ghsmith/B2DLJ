@@ -12,6 +12,8 @@ public class Block {
 
     @XmlAttribute
     public int blockNo;
+    @XmlAttribute
+    public String blockDesigLab;
 
     @XmlElementWrapper(name = "slides")
     @XmlElement(name = "slide")

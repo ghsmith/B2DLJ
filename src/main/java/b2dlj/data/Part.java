@@ -13,6 +13,8 @@ public class Part {
     @XmlAttribute
     public String partDesig;
     @XmlAttribute
+    public String partDesigLab;
+    @XmlAttribute
     public String partType;
     @XmlAttribute
     public String source;

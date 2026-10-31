@@ -9,6 +9,8 @@ public class Slide {
     @XmlAttribute
     public int slideNo;
     @XmlAttribute
+    public String slideDesigLab;
+    @XmlAttribute
     public String stain;
 
 }

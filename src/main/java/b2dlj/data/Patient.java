@@ -11,6 +11,8 @@ public class Patient {
     @XmlTransient
     public String patId;
     @XmlAttribute
+    public String patIdStudy;
+    @XmlAttribute
     public String mrn;
     @XmlAttribute
     public Date dateOfBirth;

@@ -3,6 +3,8 @@ package b2dlj.finder;
 import b2dlj.data.Block;
 import b2dlj.data.Part;
 import b2dlj.data.Slide;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +15,8 @@ import java.util.List;
 
 public class PartFinder {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(PartFinder.class);
+
     Connection connClr;
     PreparedStatement pstmt;
 
@@ -21,6 +25,7 @@ public class PartFinder {
         this.connClr = connClr;
         pstmt = connClr.prepareStatement("""
 select
+  lci.case_num,
   substring(sdm.spec_number_ln1, len(lci.case_num) + 2, 10) part_desig,
   cast(replace(substring(odm.container_name, len(sdm.spec_number_ln1) + 1, 2), '-', '') as int) block_no,
   cast(substring(substring(odm.container_name, len(sdm.spec_number_ln1) + 1, 10), charindex('-', substring(odm.container_name, len(sdm.spec_number_ln1) + 1, 10)) + 1, 10) as int) slide_no,
@@ -42,15 +47,16 @@ where
   and stl.task_action_c = 3
   and lci.requisition_id = ?
 order by
-  1,2,3
+  2,3,4
         """);
 
     }
 
-    public List<Part> getByCaseId(String caseId) throws SQLException{
+    public List<Part> getByCaseId(long caseId) throws SQLException{
+        LOGGER.info(String.format("getByCaseId: %s", caseId));
         List<Part> parts = new ArrayList<>();
         pstmt.clearParameters();
-        pstmt.setString(1, caseId);
+        pstmt.setLong(1, caseId);
         ResultSet rs = pstmt.executeQuery();
         Part currentPart = null;
         Block currentBlock = null;
@@ -64,6 +70,7 @@ order by
                 part.protocol = rs.getString("protocol");
                 part.descr = rs.getString("descr");
                 part.blocks = new ArrayList<>();
+                part.partDesigLab = String.format("%s-%s", rs.getString("case_num"), part.partDesig);
                 currentPart = part;
                 currentBlock = null;
             }
@@ -72,12 +79,14 @@ order by
                 currentPart.blocks.add(block);
                 block.blockNo = rs.getInt("block_no");
                 block.slides = new ArrayList<>();
+                block.blockDesigLab = String.format("%s-%s%d", rs.getString("case_num"), currentPart.partDesig,  block.blockNo);
                 currentBlock = block;
             }
             Slide slide = new Slide();
             currentBlock.slides.add(slide);
             slide.slideNo = rs.getInt("slide_no");
             slide.stain = rs.getString("stain");
+            slide.slideDesigLab = String.format("%s-%s%d-%d", rs.getString("case_num"), currentPart.partDesig,  currentBlock.blockNo, slide.slideNo);
         }
         return parts;
     }
