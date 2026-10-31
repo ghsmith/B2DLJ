@@ -13,6 +13,8 @@ public class Slide {
     @XmlAttribute
     public String stain;
     @XmlAttribute
-    public String slideFileName;
+    public String anonSlideFileName;
+    @XmlAttribute
+    public String anonSlideId;
 
 }

@@ -1,18 +1,13 @@
 package b2dlj.data;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.SchemaOutputResolver;
+import jakarta.xml.bind.*;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 @XmlRootElement
@@ -39,6 +34,14 @@ public class StudyPatients {
                 return result;
             }
         });
+
+    }
+
+    public static StudyPatients Unmarshal(String fileName) throws FileNotFoundException, JAXBException {
+
+        JAXBContext jc = JAXBContext.newInstance(new Class[] { StudyPatients.class });
+        Unmarshaller unmarshaller = jc.createUnmarshaller();
+        return (StudyPatients) unmarshaller.unmarshal(new FileInputStream(fileName + ".xml"));
 
     }
 

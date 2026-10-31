@@ -7,6 +7,8 @@ import b2dlj.finder.PartFinder;
 import b2dlj.finder.PathologyCaseFinder;
 import b2dlj.finder.PatientFinder;
 import jakarta.xml.bind.JAXBException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Main {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(PartFinder.class);
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException, JAXBException, IOException {
 
@@ -39,10 +43,13 @@ public class Main {
 
         Map<String, Patient> patientMap = new HashMap<>();
 
+        int n = 0;
+
         for(String accessionNumber : accessionNumbers) {
 
             Patient patient = PatientFinder.getByAccessionNumber(accessionNumber);
             if (patientMap.get(patient.patId) != null) {
+                LOGGER.info("using a patient retrieved for a previous case");
                 patient = patientMap.get(patient.patId);
             } else {
                 patientMap.put(patient.patId, patient);
@@ -58,11 +65,16 @@ public class Main {
 
             }
 
+            if(++n % 10 == 0) {
+                LOGGER.info(String.format("%d cases retrieved, saving %s.{xml|xsd}", n, "StudyPatients"));
+                studyPatients.marshal("StudyPatients");
+            }
+
         }
 
-        connClr.close();
-
         studyPatients.marshal("StudyPatients");
+
+        connClr.close();
 
     }
 

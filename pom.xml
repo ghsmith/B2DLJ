@@ -42,6 +42,11 @@
             <!-- Use jre8, jre11, jre17, or jre21 depending on your project's Java version -->
             <version>13.6.0.jre11</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20260814</version>
+        </dependency>
     </dependencies>
 
     <build>
